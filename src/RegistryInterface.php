@@ -13,5 +13,7 @@ interface RegistryInterface
 
     public function isEmpty(): bool;
 
+    public function isExists(string $key): bool;
+
     public function export(): array;
 }

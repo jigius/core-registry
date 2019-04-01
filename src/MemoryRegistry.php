@@ -13,33 +13,6 @@ final class MemoryRegistry implements RegistryInterface
         $this->separator = $separator;
     }
 
-    private function &getEdge(string $key, $createIfNotExists = null)
-    {
-        $null = null;
-        $parent =& $this->data;
-        if (($path = explode($this->separator(), $key)) > 1) {
-            $key = array_pop($path);
-            foreach ($path as $s) {
-                if (!isset($parent[$s])) {
-                    if ($createIfNotExists === null) {
-                        return $null;
-                    }
-                    $parent[$s] = [];
-                } elseif (!is_array($parent[$s])) {
-                    throw new \OutOfBoundsException();
-                }
-                $parent =& $parent[$s];
-            }
-        }
-        if (!isset($parent[$key])) {
-            if ($createIfNotExists === null) {
-                return $null;
-            }
-            $parent[$key] = $createIfNotExists;
-        }
-        return $parent[$key];
-    }
-
     public function isEmpty(): bool
     {
         return count($this->data) == 0;
@@ -54,25 +27,6 @@ final class MemoryRegistry implements RegistryInterface
     {
         $this->data = $this->delete(explode($this->separator(), $key), $this->data, $collapseEmpty);
         return $this;
-    }
-
-    private function delete(array $path, &$data, bool $collapseEmpty)
-    {
-        $res = [];
-        $cc = array_shift($path);
-        foreach ($data as $k => $v) {
-            if ($k != $cc) {
-                $res[$k] = $data[$k];
-                continue;
-            }
-
-            if (count($path) > 0) {
-                if (!empty($r = $this->delete($path, $data[$k], $collapseEmpty)) || !$collapseEmpty) {
-                    $res[$k] = $r;
-                }
-            }
-        }
-        return $res;
     }
 
     public function extract(string $key, $default = null)
@@ -100,11 +54,71 @@ final class MemoryRegistry implements RegistryInterface
         return $this;
     }
 
+    public function isExists(string $key) : bool
+    {
+        $parent =& $this->data;
+        if (($path = explode($this->separator(), $key)) > 1) {
+            $key = array_pop($path);
+            foreach ($path as $s) {
+                if (!isset($parent[$s]) || !is_array($parent[$s])) {
+                    return false;
+                }
+                $parent =& $parent[$s];
+            }
+        }
+        return isset($parent[$key]);
+    }
+
     private function separator()
     {
         if (mb_strlen($this->separator) > 1) {
             throw new \RuntimeException("separator=`{$this->separator}` is invalid");
         }
         return $this->separator;
+    }
+
+    private function &getEdge(string $key, $createIfNotExists = null)
+    {
+        $null = null;
+        $parent =& $this->data;
+        if (($path = explode($this->separator(), $key)) > 1) {
+            $key = array_pop($path);
+            foreach ($path as $s) {
+                if (!isset($parent[$s])) {
+                    if ($createIfNotExists === null) {
+                        return $null;
+                    }
+                    $parent[$s] = [];
+                } elseif (!is_array($parent[$s])) {
+                    throw new \OutOfBoundsException();
+                }
+                $parent =& $parent[$s];
+            }
+        }
+        if (!isset($parent[$key])) {
+            if ($createIfNotExists === null) {
+                return $null;
+            }
+            $parent[$key] = $createIfNotExists;
+        }
+        return $parent[$key];
+    }
+
+    private function delete(array $path, &$data, bool $collapseEmpty)
+    {
+        $res = [];
+        $cc = array_shift($path);
+        foreach ($data as $k => $v) {
+            if ($k != $cc) {
+                $res[$k] = $data[$k];
+                continue;
+            }
+            if (count($path) > 0) {
+                if (!empty($r = $this->delete($path, $data[$k], $collapseEmpty)) || !$collapseEmpty) {
+                    $res[$k] = $r;
+                }
+            }
+        }
+        return $res;
     }
 }
