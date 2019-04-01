@@ -1,0 +1,22 @@
+{
+    "name": "jigius/core-registry",
+    "description": "An interface Registry and its simple in-memory implementation with accessing to array data via composed key separated by a specified character",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jigius",
+            "email": "jigius@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1.0",
+        "symfony/polyfill-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\Registry\\": "src/"
+        }
+    }
+}
