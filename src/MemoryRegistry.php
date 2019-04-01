@@ -78,8 +78,8 @@ final class MemoryRegistry implements RegistryInterface
     {
         return new self(
             array_merge(
-                $this->export(),
-                $registry->export()
+                $this->exported(),
+                $registry->exported()
             ),
             $this->separator
         );
