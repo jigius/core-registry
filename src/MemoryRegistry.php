@@ -13,9 +13,9 @@ final class MemoryRegistry implements RegistryInterface
         $this->separator = $separator;
     }
 
-    public function create(array $arr = [], string $separator = ".") : RegistryInterface
+    public function create() : RegistryInterface
     {
-        return new self($arr, $separator);
+        return new self([], $this->separator);
     }
 
     public function isEmpty(): bool
