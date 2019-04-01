@@ -13,7 +13,7 @@ final class MemoryRegistry implements RegistryInterface
         $this->separator = $separator;
     }
 
-    public function create() : RegistryInterface
+    public function created() : RegistryInterface
     {
         return new self([], $this->separator);
     }
@@ -23,7 +23,7 @@ final class MemoryRegistry implements RegistryInterface
         return count($this->data) == 0;
     }
 
-    public function export(): array
+    public function exported(): array
     {
         return $this->data;
     }
@@ -72,6 +72,17 @@ final class MemoryRegistry implements RegistryInterface
             }
         }
         return isset($parent[$key]);
+    }
+
+    public function merged(RegistryInterface $registry) : RegistryInterface
+    {
+        return new self(
+            array_merge(
+                $this->export(),
+                $registry->export()
+            ),
+            $this->separator
+        );
     }
 
     private function separator()

@@ -3,7 +3,7 @@ namespace Core\Registry;
 
 interface RegistryInterface
 {
-    public function create(array $arr = [], string $separator = ".") : RegistryInterface;
+    public function created(array $arr = [], string $separator = ".") : RegistryInterface;
 
     public function remove(string $key, bool $collapseEmpty = true) : RegistryInterface;
 
@@ -17,5 +17,7 @@ interface RegistryInterface
 
     public function isExists(string $key): bool;
 
-    public function export(): array;
+    public function exported(): array;
+
+    public function merged(RegistryInterface $registry) : RegistryInterface;
 }
