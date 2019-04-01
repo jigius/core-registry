@@ -13,6 +13,11 @@ final class MemoryRegistry implements RegistryInterface
         $this->separator = $separator;
     }
 
+    public function create(array $arr = [], string $separator = ".") : RegistryInterface
+    {
+        return new self($arr, $separator);
+    }
+
     public function isEmpty(): bool
     {
         return count($this->data) == 0;

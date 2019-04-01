@@ -3,6 +3,8 @@ namespace Core\Registry;
 
 interface RegistryInterface
 {
+    public function create(array $arr = [], string $separator = ".") : RegistryInterface;
+
     public function remove(string $key, bool $collapseEmpty = true) : RegistryInterface;
 
     public function extract(string $key, $default = null);
